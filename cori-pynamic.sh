@@ -1,9 +1,5 @@
 #!/bin/bash
 
-if [ -z "`type module 2>/dev/null`" ]; then 
-    . /opt/modules/default/etc/modules.sh
-fi
-
 job_id=`sbatch                               cori-pynamic-150-common.sh   | awk '{ print $NF }'`
 echo $job_id
 
