@@ -4,7 +4,7 @@
 #SBATCH --nodes=200
 #SBATCH --ntasks-per-node=24
 #SBATCH --output=slurm-edison-pynamic-200-project-%j.out
-#SBATCH --partition=debug
+#SBATCH --partition=regular
 #SBATCH --qos=premium
 #SBATCH --time=00:30:00
 
