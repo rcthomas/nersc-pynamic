@@ -18,12 +18,15 @@ module list
 
 set -x
 
-# Stage Pynamic to target filesystem.
+# Path to Pynamic installation.
 
-PYNAMIC_SRC=/usr/common/software/pynamic/pynamic/pynamic-pyMPI-2.6a1
 PYNAMIC_DIR=/project/projectdirs/mpccc/pynamic-workdir/cori
-mkdir -p $PYNAMIC_DIR
-cp -r $PYNAMIC_SRC/* $PYNAMIC_DIR/.
+
+# Stage Pynamic to target filesystem.
+# 
+# PYNAMIC_SRC=/usr/common/software/pynamic/pynamic/pynamic-pyMPI-2.6a1
+# mkdir -p $PYNAMIC_DIR
+# cp -r $PYNAMIC_SRC/* $PYNAMIC_DIR/.
 
 # Main benchmark run.
 
