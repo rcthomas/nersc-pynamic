@@ -39,9 +39,12 @@ class PynamicRun ( object ) :
             return list( stream )
 
     def __repr__( self ) :
-        return "{:<10} {:<10} {:<10} {:<20} {:<5} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}".format( self.host, 
+        result = "{:<10} {:<10} {:<10} {:<20} {:<5} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}".format( self.host, 
                 self.filesystem, self.job_id, self.executed.isoformat(), self.mpi_size, self.startup_time, 
                 self.import_time, self.visit_time, self.compute_time, self.total_time )
+        if self.executed.date() == datetime.date.today() :
+            result = "\033[1m" + result + "\033[0m"
+        return result
 
     def __cmp__( self, other ) :
         if self.host < other.host :
@@ -61,6 +64,8 @@ class PynamicRun ( object ) :
 if __name__ == "__main__" :
 
     import argparse
+    import os
+    import time
 
     parser = argparse.ArgumentParser()
     parser.add_argument( "output_paths", help = "list of output paths to parse", nargs  = "+"          )
@@ -72,7 +77,11 @@ if __name__ == "__main__" :
         try :
             pynamic_runs.append( PynamicRun( path ) )
         except :
-            print >> sys.stderr, "[WARNING] Unable to parse:", path
+            cdate = datetime.date.fromtimestamp( os.path.getctime( path ) )
+            message = "[WARNING] Unable to parse {} (created {})".format( path, cdate.isoformat() )
+            if cdate == datetime.date.today() :
+                message = "\033[1m\033[91m" + message + "\033[0m\033[0m"
+            sys.stderr.write( "{}\n".format( message ) )
             pass
 
     for run in sorted( pynamic_runs ) :
