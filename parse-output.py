@@ -39,7 +39,7 @@ class PynamicRun ( object ) :
             return list( stream )
 
     def __repr__( self ) :
-        result = "{:<10} {:<10} {:<10} {:<20} {:<5} {:12.6f} {:12.6f} {:12.6f} {:12.6f} {:12.6f}".format( self.host, 
+        result = "{:<10} {:<10} {:<10} {:<20} {:<5} {:8.2f} {:8.2f} {:8.2f} {:8.2f} {:8.2f}".format( self.host, 
                 self.filesystem, self.job_id, self.executed.isoformat(), self.mpi_size, self.startup_time, 
                 self.import_time, self.visit_time, self.compute_time, self.total_time )
         if self.executed.date() == datetime.date.today() :
@@ -69,7 +69,7 @@ if __name__ == "__main__" :
 
     parser = argparse.ArgumentParser()
     parser.add_argument( "output_paths", help = "list of output paths to parse", nargs  = "+"          )
-    parser.add_argument( "--sum", "-s" , help = "print sum only"               , action = "store_true" )
+    parser.add_argument( "--sum" , "-s", help = "print sum only"               , action = "store_true" )
     args = parser.parse_args()
 
     pynamic_runs = list()
