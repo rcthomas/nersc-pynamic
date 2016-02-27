@@ -23,7 +23,7 @@ set -x
 PYNAMIC_DIR=/project/projectdirs/mpccc/pynamic-workdir/edison
 
 # Stage Pynamic to target filesystem.
-#
+# 
 # PYNAMIC_SRC=/usr/common/usg/pynamic/pynamic-pyMPI-2.6a1
 # mkdir -p $PYNAMIC_DIR
 # cp -r $PYNAMIC_SRC/* $PYNAMIC_DIR/.
