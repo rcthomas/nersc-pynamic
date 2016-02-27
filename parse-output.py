@@ -86,29 +86,3 @@ if __name__ == "__main__" :
 
     for run in sorted( pynamic_runs ) :
         print run
-
-
-### records = list()
-### for filename in sys.argv[ 1 : ] :
-###     with open( filename, "r" ) as stream :
-###         times = list()
-###         for line in stream :
-###             if line.startswith( "Pynamic: run on" ) :
-###                 tokens = line.split()
-###                 dt     = datetime.datetime.strptime( " ".join( tokens[ 3 : 5 ] ), "%x %X" )
-###                 size   = tokens[ 6 ]
-###             if line.startswith( "Pynamic:" ) and line.find( "time" ) >= 0 :
-###                 times.append( float( line.split()[ -2 ] ) )
-###             if line.find( "mpi test passed" ) >= 0 :
-###                 break
-###         total = 0.0
-###         try :
-###             for i in range( 4 ) :
-###                 total += times[ i ]
-###             records.append( ( filename, dt, size, times[ 0 ], times[ 1 ], times[ 2 ], times[ 3 ], total ) )
-###         except :
-###             pass
-### 
-### for record in sorted( records, key = lambda r : r[ 1 ] ) :
-###     print "%srecord
-### 
