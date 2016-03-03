@@ -1,19 +1,19 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
 #SBATCH --job-name=cori-pynamic-150-datawarp
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=rcthomas@lbl.gov
 #SBATCH --nodes=150
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-pynamic-150-datawarp-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=premium
-#SBATCH --time=00:30:00
-#DW jobdw capacity=2TB access_mode=striped type=scratch
+#SBATCH --time=00:40:00
+#DW jobdw capacity=200GB access_mode=striped type=scratch
 
 # Load modules.
 
 module swap PrgEnv-intel PrgEnv-gnu
 module load python
-# module load dws # see below
 module list
 
 # Verbose debugging output.
@@ -26,15 +26,9 @@ PYNAMIC_SRC=/usr/common/software/pynamic/pynamic/pynamic-pyMPI-2.6a1
 PYNAMIC_DIR=$DW_JOB_STRIPED
 cp -r $PYNAMIC_SRC/* $PYNAMIC_DIR/.
 
-# DWS: Doesn't work, get certificate error...
-# 
-# sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')
-# echo "session ID is: "${sessID}
-# instID=$(dwstat instances | grep $sessID | awk '{print $1}')
-# echo "instance ID is: "${instID}
-# echo "fragments list:"
-# echo "frag state instID capacity gran node"
-# dwstat fragments | grep ${instID}
+# Allows up to 5 minutes for pynamic-pyMPI to MPI_Init().
+
+export PMI_MMAP_SYNC_WAIT_TIME=300
 
 # Main benchmark run.
 

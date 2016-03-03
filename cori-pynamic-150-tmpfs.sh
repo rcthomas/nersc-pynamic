@@ -1,12 +1,13 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
 #SBATCH --job-name=cori-pynamic-150-tmpfs
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=rcthomas@lbl.gov
 #SBATCH --nodes=150
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-pynamic-150-tmpfs-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=premium
-#SBATCH --time=00:30:00
+#SBATCH --time=00:40:00
 
 # Load modules.
 

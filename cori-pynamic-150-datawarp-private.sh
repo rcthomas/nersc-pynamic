@@ -1,13 +1,14 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
-#SBATCH --job-name=edison-pynamic-200-project
+#SBATCH --job-name=cori-pynamic-150-datawarp-private
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
-#SBATCH --nodes=200
-#SBATCH --ntasks-per-node=24
-#SBATCH --output=slurm-edison-pynamic-200-project-%j.out
+#SBATCH --nodes=150
+#SBATCH --ntasks-per-node=32
+#SBATCH --output=slurm-cori-pynamic-150-datawarp-private-%j.out
 #SBATCH --partition=regular
 #SBATCH --time=00:40:00
+#DW jobdw capacity=400GB access_mode=private type=scratch
 
 # Load modules.
 
@@ -19,15 +20,11 @@ module list
 
 set -x
 
-# Path to Pynamic installation.
-
-PYNAMIC_DIR=/project/projectdirs/mpccc/pynamic-workdir/edison
-
 # Stage Pynamic to target filesystem.
-# 
-# PYNAMIC_SRC=/usr/common/usg/pynamic/pynamic-pyMPI-2.6a1
-# mkdir -p $PYNAMIC_DIR
-# cp -r $PYNAMIC_SRC/* $PYNAMIC_DIR/.
+
+PYNAMIC_SRC=/usr/common/software/pynamic/pynamic/pynamic-pyMPI-2.6a1
+PYNAMIC_DIR=$DW_JOB_PRIVATE
+srun -n $SLURM_JOB_NUM_NODES --ntasks-per-node=1 cp -r $PYNAMIC_SRC/* $PYNAMIC_DIR/.
 
 # Main benchmark run.
 
@@ -42,5 +39,5 @@ time srun -n 1 $PYNAMIC_DIR/pynamic-pyMPI $PYNAMIC_DIR/pynamic_driver.py `date +
 # For usgweb.
 
 if [ "$USER" == "fbench" ]; then
-    touch $SCRATCH/Edison_Perf/Pynamic/$SLURM_JOB_ID
+    touch $SCRATCH/Cori_Perf/Pynamic/$SLURM_JOB_ID
 fi

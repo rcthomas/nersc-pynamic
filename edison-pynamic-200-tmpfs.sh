@@ -1,12 +1,13 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
 #SBATCH --job-name=edison-pynamic-200-tmpfs
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=rcthomas@lbl.gov
 #SBATCH --nodes=200
 #SBATCH --ntasks-per-node=24
 #SBATCH --output=slurm-edison-pynamic-200-tmpfs-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=premium
-#SBATCH --time=00:30:00
+#SBATCH --time=00:40:00
 
 # Load modules.
 
