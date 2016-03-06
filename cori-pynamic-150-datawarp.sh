@@ -7,8 +7,12 @@
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-pynamic-150-datawarp-%j.out
 #SBATCH --partition=regular
+#SBATCH --qos=normal
 #SBATCH --time=00:40:00
-#DW jobdw capacity=200GB access_mode=striped type=scratch
+#DW jobdw capacity=2TB access_mode=striped type=scratch
+
+#   2016-03-16  Changed reservation from 200GB to 2TB, will take effect after
+#               next job runs.
 
 # Load modules.
 
