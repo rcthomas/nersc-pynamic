@@ -7,6 +7,7 @@
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-pynamic-150-tmpfs-%j.out
 #SBATCH --partition=regular
+#SBATCH --qos=normal
 #SBATCH --time=00:40:00
 
 # Load modules.
