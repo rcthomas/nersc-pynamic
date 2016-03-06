@@ -13,8 +13,8 @@ class PynamicRun ( object ) :
     def _parse_output_path( self ) :
         tokens = self.output_path[ : -4 ].split( "-" )
         self.host       = tokens[ 1 ]
-        self.filesystem = tokens[ 4 ]
-        self.job_id     = int( tokens[ 5 ] )
+        self.filesystem = "-".join( tokens[ 4 : -1 ] )
+        self.job_id     = int( tokens[ -1 ] )
 
     def _parse_output_content( self ) :
         times = list()
@@ -32,14 +32,14 @@ class PynamicRun ( object ) :
         self.import_time  = times[ 1 ]
         self.visit_time   = times[ 2 ]
         self.compute_time = times[ 3 ] 
-        self.total_time   = sum( times )
+        self.total_time   = sum( times[ : 3 ] ) # does not include compute
 
     def _output_content( self ) :
         with open( self.output_path, "r" ) as stream :
             return list( stream )
 
     def __repr__( self ) :
-        result = "{:<10} {:<10} {:<10} {:<20} {:<5} {:8.2f} {:8.2f} {:8.2f} {:8.2f} {:8.2f}".format( self.host, 
+        result = "{:<10} {:<15} {:<10} {:<20} {:<5} {:8.2f} {:8.2f} {:8.2f} {:8.2f} {:8.2f}".format( self.host, 
                 self.filesystem, self.job_id, self.executed.isoformat(), self.mpi_size, self.startup_time, 
                 self.import_time, self.visit_time, self.compute_time, self.total_time )
         if self.executed.date() == datetime.date.today() :
