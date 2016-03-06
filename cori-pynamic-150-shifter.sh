@@ -8,8 +8,8 @@
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-pynamic-150-shifter-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=premium
-#SBATCH --time=00:10:00
+#SBATCH --qos=normal
+#SBATCH --time=00:40:00
 
 # Verbose debugging output.
 
