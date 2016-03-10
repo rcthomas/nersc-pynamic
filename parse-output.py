@@ -68,8 +68,7 @@ if __name__ == "__main__" :
     import time
 
     parser = argparse.ArgumentParser()
-    parser.add_argument( "output_paths", help = "list of output paths to parse", nargs  = "+"          )
-    parser.add_argument( "--sum" , "-s", help = "print sum only"               , action = "store_true" )
+    parser.add_argument( "output_paths", help = "list of output paths to parse", nargs  = "+" )
     args = parser.parse_args()
 
     pynamic_runs = list()
