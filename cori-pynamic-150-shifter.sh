@@ -11,9 +11,17 @@
 #SBATCH --qos=normal
 #SBATCH --time=25
 
-# Verbose debugging output.
+# Configuration.
 
-set -x
+commit=true
+debug=false
+
+# Optional debug output.
+
+if [ $debug = true ]; then
+    module list
+    set -x
+fi
 
 # Unset variables.
 
@@ -27,13 +35,32 @@ unset LIBRARY_PATH
 
 export PMI_MMAP_SYNC_WAIT_TIME=300
 
+# Initialize benchmark result.
+
+if [ $commit = true ]; then
+    module load mysql
+    module load mysqlpython
+    python report-benchmark.py initialize
+    module unload mysqlpython
+fi
+
 # Run benchmark.
 
+output=latest-$SLURM_JOB_NAME.txt
 module load shifter
-srun shifter /bench/pynamic-pyMPI /bench/pynamic_driver.py $(date +%s)
+srun shifter /bench/pynamic-pyMPI /bench/pynamic_driver.py $(date +%s) | tee $output
 
-# For usgweb.
+# Extract result.
 
-if [ "$USER" == "fbench" ]; then
-    touch $SCRATCH/Cori_Perf/Pynamic/$SLURM_JOB_ID
+startup_time=$( grep '^Pynamic: startup time' $output | awk '{ print $(NF-1) }' )
+import_time=$( grep '^Pynamic: module import time' $output | awk '{ print $(NF-1) }' )
+visit_time=$( grep '^Pynamic: module visit time' $output | awk '{ print $(NF-1) }' )
+total_time=$( echo $startup_time + $import_time + $visit_time | bc )
+
+# Finalize benchmark result.
+
+if [ $commit = true ]; then
+    module load mysqlpython
+    python report-benchmark.py finalize $total_time
 fi
+

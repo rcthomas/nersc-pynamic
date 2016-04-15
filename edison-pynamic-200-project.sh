@@ -10,17 +10,24 @@
 #SBATCH --qos=normal
 #SBATCH --time=45
 
+# Configuration.
+
+commit=true
+debug=false
+
 # Load modules.
 
 module unload python
 module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
 module load python
-module list
 
-# Verbose debugging output.
+# Optional debug output.
 
-set -x
+if [ $debug = true ]; then
+    module list
+    set -x
+fi
 
 # Stage Pynamic.
 
@@ -32,17 +39,35 @@ mkdir -p $benchmark_dest
 time rsync -az $benchmark_src $benchmark_dest
 export LD_LIBRARY_PATH=$benchmark_path:$LD_LIBRARY_PATH
 
+# Initialize benchmark result.
+
+if [ $commit = true ]; then
+    module load mysql
+    module load mysqlpython
+    python report-benchmark.py initialize
+    module unload mysqlpython
+fi
+
 # Run benchmark.
 
-time srun $benchmark_path/pynamic-pyMPI $benchmark_path/pynamic_driver.py $(date +%s)
+output=latest-$SLURM_JOB_NAME.txt
+time srun $benchmark_path/pynamic-pyMPI $benchmark_path/pynamic_driver.py $(date +%s) | tee $output
+
+# Extract result.
+
+startup_time=$( grep '^Pynamic: startup time' $output | awk '{ print $(NF-1) }' )
+import_time=$( grep '^Pynamic: module import time' $output | awk '{ print $(NF-1) }' )
+visit_time=$( grep '^Pynamic: module visit time' $output | awk '{ print $(NF-1) }' )
+total_time=$( echo $startup_time + $import_time + $visit_time | bc )
+
+# Finalize benchmark result.
+
+if [ $commit = true ]; then
+    module load mysqlpython
+    python report-benchmark.py finalize $total_time
+fi
 
 # Debug run.
 
 export LD_DEBUG=libs
 time srun -n 1 $benchmark_path/pynamic-pyMPI $benchmark_path/pynamic_driver.py $(date +%s)
-
-# For usgweb.
-
-if [ "$USER" == "fbench" ]; then
-    touch $SCRATCH/Edison_Perf/Pynamic/$SLURM_JOB_ID
-fi
