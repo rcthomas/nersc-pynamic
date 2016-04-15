@@ -7,11 +7,13 @@
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-pynamic-150-project-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=low
-#SBATCH --time=00:40:00
+#SBATCH --qos=normal
+#SBATCH --time=45
 
 # Load modules.
 
+module unload python
+module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
 module load python
 module list
@@ -20,25 +22,24 @@ module list
 
 set -x
 
-# Path to Pynamic installation.
+# Stage Pynamic.
 
-PYNAMIC_DIR=/project/projectdirs/mpccc/pynamic-workdir/cori
+benchmark_src=/usr/common/software/pynamic/pynamic/pynamic-pyMPI-2.6a1
+benchmark_dest=/project/projectdirs/mpccc/$USER/staged-pynamic/$NERSC_HOST
+benchmark_path=$benchmark_dest/pynamic-pyMPI-2.6a1
 
-# Stage Pynamic to target filesystem.
-# 
-# PYNAMIC_SRC=/usr/common/software/pynamic/pynamic/pynamic-pyMPI-2.6a1
-# mkdir -p $PYNAMIC_DIR
-# cp -r $PYNAMIC_SRC/* $PYNAMIC_DIR/.
+mkdir -p $benchmark_dest
+time rsync -az $benchmark_src $benchmark_dest
+export LD_LIBRARY_PATH=$benchmark_path:$LD_LIBRARY_PATH
 
-# Main benchmark run.
+# Run benchmark.
 
-export LD_LIBRARY_PATH="$PYNAMIC_DIR:$LD_LIBRARY_PATH"
-time srun $PYNAMIC_DIR/pynamic-pyMPI $PYNAMIC_DIR/pynamic_driver.py `date +"%s"`
+time srun $benchmark_path/pynamic-pyMPI $benchmark_path/pynamic_driver.py $(date +%s)
 
 # Debug run.
 
 export LD_DEBUG=libs
-time srun -n 1 $PYNAMIC_DIR/pynamic-pyMPI $PYNAMIC_DIR/pynamic_driver.py `date +"%s"`
+time srun -n 1 $benchmark_path/pynamic-pyMPI $benchmark_path/pynamic_driver.py $(date +%s)
 
 # For usgweb.
 

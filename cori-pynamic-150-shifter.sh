@@ -8,8 +8,8 @@
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-pynamic-150-shifter-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=low
-#SBATCH --time=00:40:00
+#SBATCH --qos=normal
+#SBATCH --time=25
 
 # Verbose debugging output.
 
@@ -23,7 +23,11 @@ unset LD_LIBRARY_PATH
 unset CRAY_LD_LIBRARY_PATH
 unset LIBRARY_PATH
 
-# Main benchmark run.
+# Allows up to 5 minutes for pynamic-pyMPI to MPI_Init().
+
+export PMI_MMAP_SYNC_WAIT_TIME=300
+
+# Run benchmark.
 
 module load shifter
 srun shifter /bench/pynamic-pyMPI /bench/pynamic_driver.py $(date +%s)

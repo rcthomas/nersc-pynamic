@@ -7,11 +7,13 @@
 #SBATCH --ntasks-per-node=24
 #SBATCH --output=slurm-edison-pynamic-200-scratch-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=low
-#SBATCH --time=00:40:00
+#SBATCH --qos=normal
+#SBATCH --time=45
 
 # Load modules.
 
+module unload python
+module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
 module load python
 module list
@@ -20,22 +22,24 @@ module list
 
 set -x
 
-# Stage Pynamic to target filesystem.
+# Stage Pynamic.
 
-PYNAMIC_SRC=/usr/common/usg/pynamic/pynamic-pyMPI-2.6a1
-PYNAMIC_DIR=$SCRATCH/pynamic-workdir
-mkdir -p $PYNAMIC_DIR
-cp -r $PYNAMIC_SRC/* $PYNAMIC_DIR/.
+benchmark_src=/usr/common/usg/pynamic/pynamic-pyMPI-2.6a1
+benchmark_dest=$SCRATCH/staged-pynamic
+benchmark_path=$benchmark_dest/pynamic-pyMPI-2.6a1
 
-# Main benchmark run.
+mkdir -p $benchmark_dest
+time rsync -az $benchmark_src $benchmark_dest
+export LD_LIBRARY_PATH=$benchmark_path:$LD_LIBRARY_PATH
 
-export LD_LIBRARY_PATH="$PYNAMIC_DIR:$LD_LIBRARY_PATH"
-time srun $PYNAMIC_DIR/pynamic-pyMPI $PYNAMIC_DIR/pynamic_driver.py `date +"%s"`
+# Run benchmark.
+
+time srun $benchmark_path/pynamic-pyMPI $benchmark_path/pynamic_driver.py $(date +%s)
 
 # Debug run.
 
 export LD_DEBUG=libs
-time srun -n 1 $PYNAMIC_DIR/pynamic-pyMPI $PYNAMIC_DIR/pynamic_driver.py `date +"%s"`
+time srun -n 1 $benchmark_path/pynamic-pyMPI $benchmark_path/pynamic_driver.py $(date +%s)
 
 # For usgweb.
 
