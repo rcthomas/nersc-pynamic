@@ -39,7 +39,7 @@ class PynamicRun ( object ) :
             return list( stream )
 
     def __repr__( self ) :
-        result = "{:<10} {:<15} {:<10} {:<20} {:<5} {:8.2f} {:8.2f} {:8.2f} {:8.2f} {:8.2f}".format( self.host, 
+        result = "{:<10} {:<15} {:<10} {:<20} {:>5} {:8.2f} {:8.2f} {:8.2f} {:8.2f} {:8.2f}".format( self.host, 
                 self.filesystem, self.job_id, self.executed.isoformat(), self.mpi_size, self.startup_time, 
                 self.import_time, self.visit_time, self.compute_time, self.total_time )
         if self.executed.date() == datetime.date.today() :
