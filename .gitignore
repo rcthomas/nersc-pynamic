@@ -1,0 +1,5 @@
+slurm*.out
+latest*.txt
+
+# PYNAMIC output picture.
+output.bmp
