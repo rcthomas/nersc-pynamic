@@ -21,7 +21,7 @@ debug=false
 module unload python
 module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
-module load python
+module load python_base
 
 # Optional debug output.
 

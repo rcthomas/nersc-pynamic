@@ -21,7 +21,6 @@ module unload python
 module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
 module load python_base
-module load numpy
 
 # Optional debug output.
 
