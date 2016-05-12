@@ -30,6 +30,9 @@ export PMI_MMAP_SYNC_WAIT_TIME=300
 # Initialize benchmark result.
 
 if [ $commit = true ]; then
+    module unload python
+    module unload altd
+    module swap PrgEnv-intel PrgEnv-gnu
     module load python_base
     module load mysql
     module load mysqlpython
