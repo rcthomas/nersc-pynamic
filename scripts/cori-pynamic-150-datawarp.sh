@@ -52,6 +52,10 @@ if [ $commit = true ]; then
     module unload mysqlpython
 fi
 
+# Sanity checks.
+
+echo PYTHONPATH: $PYTHONPATH
+
 # Run benchmark.
 
 output=latest-$SLURM_JOB_NAME.txt

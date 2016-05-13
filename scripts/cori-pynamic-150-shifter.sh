@@ -38,10 +38,15 @@ export PMI_MMAP_SYNC_WAIT_TIME=300
 # Initialize benchmark result.
 
 if [ $commit = true ]; then
+    module unload python
+    module unload altd
+    module swap PrgEnv-intel PrgEnv-gnu
+    module load python_base
     module load mysql
     module load mysqlpython
     python report-benchmark.py initialize
     module unload mysqlpython
+    module unload python_base
 fi
 
 # Run benchmark.
@@ -60,6 +65,7 @@ total_time=$( echo $startup_time + $import_time + $visit_time | bc )
 # Finalize benchmark result.
 
 if [ $commit = true ]; then
+    module load python_base
     module load mysqlpython
     python report-benchmark.py finalize $total_time
 fi
