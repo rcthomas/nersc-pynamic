@@ -5,7 +5,7 @@
 #SBATCH --mail-user=rcthomas@lbl.gov
 #SBATCH --nodes=150
 #SBATCH --ntasks-per-node=32
-#SBATCH --output=slurm-cori-pynamic-150-common-%j.out
+#SBATCH --output=logs/slurm-cori-pynamic-150-common-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
 #SBATCH --time=25
