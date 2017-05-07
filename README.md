@@ -115,4 +115,4 @@ Some Discussion
 The Pynamic benchmark has been deployed at NERSC on Edison and Cori and is being run regularly (once a day on each system) to gauge shared library performance.
 In general Pynamic's performance measurement values look like:
 
-    *tmpfs* (or *shifter* on Cori) < *common* < *project* and *scratch*
+> *tmpfs* (or *shifter* on Cori) < *common* < *project* and *scratch*
